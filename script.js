@@ -160,6 +160,8 @@ document.addEventListener("DOMContentLoaded", () => {
     initMobileNavClose();
     initActiveNavHighlight();
     initSmoothScroll();
+    initFooterYear();
+    initBackToTop();
 
     // Small delay to let DOM paint before activating animations
     requestAnimationFrame(() => {
@@ -167,3 +169,69 @@ document.addEventListener("DOMContentLoaded", () => {
         initSkillBars();
     });
 });
+
+// ---- Dynamic Footer Year ----
+function initFooterYear() {
+    const footer = document.querySelector(".site-footer p");
+    if (footer) {
+        const year = new Date().getFullYear();
+        footer.innerHTML = footer.innerHTML.replace(/\d{4}/, year);
+    }
+}
+
+// ---- Back to Top Button ----
+function initBackToTop() {
+    // Create button dynamically
+    const btn = document.createElement("button");
+    btn.id = "back-to-top";
+    btn.innerHTML = '<i class="bi bi-arrow-up"></i>';
+    btn.setAttribute("aria-label", "Volver al inicio");
+    btn.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(108, 92, 231, 0.15);
+        color: #a29bfe;
+        font-size: 1.2rem;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.35s ease;
+        z-index: 999;
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
+    document.body.appendChild(btn);
+
+    // Show/hide on scroll
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 400) {
+            btn.style.opacity = "1";
+            btn.style.visibility = "visible";
+        } else {
+            btn.style.opacity = "0";
+            btn.style.visibility = "hidden";
+        }
+    });
+
+    // Scroll to top on click
+    btn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // Hover effect
+    btn.addEventListener("mouseenter", () => {
+        btn.style.background = "rgba(108, 92, 231, 0.35)";
+        btn.style.transform = "translateY(-3px)";
+    });
+    btn.addEventListener("mouseleave", () => {
+        btn.style.background = "rgba(108, 92, 231, 0.15)";
+        btn.style.transform = "translateY(0)";
+    });
+}
